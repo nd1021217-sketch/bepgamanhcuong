@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BẾP GA MẠNH CƯỜNG</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px 0;
+      background: #fff;
+      border-bottom: 2px solid #e63946;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #e63946;
+      letter-spacing: 1px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    input, select {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .card h3 {
+      margin: 10px 0 5px;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin: 3px 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .price {
+      color: #e63946;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Responsive cho điện thoại */
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      header h1 {
+        font-size: 22px;
+      }
+      .card h3 {
+        font-size: 16px;
+      }
+      .card p {
+        font-size: 13px;
+      }
+      input, select {
+        font-size: 13px;
+        padding: 5px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>BẾP GA MẠNH CƯỜNG</h1>
+  </header>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Tìm kiếm...">
+    <select id="typeFilter">
+      <option value="">Tất cả loại</option>
+      <option value="gas">Bếp Gas</option>
+      <option value="dien">Bếp Điện</option>
+      <option value="tu">Bếp Từ</option>
+    </select>
+    <select id="brandFilter">
+      <option value="">Tất cả thương hiệu</option>
+      <option value="Sunhouse">Sunhouse</option>
+      <option value="Panasonic">Panasonic</option>
+      <option value="Electrolux">Electrolux</option>
+    </select>
+    <select id="sort">
+      <option value="">Sắp xếp</option>
+      <option value="asc">Giá tăng dần</option>
+      <option value="desc">Giá giảm dần</option>
+    </select>
+  </div>
+
+  <div class="grid" id="productGrid"></div>
+
+  <script>
+    const products = [
+      {id:"BEP1", name:"Bếp Gas Sunhouse SHB333", type:"gas", brand:"Sunhouse", price:2500000, img:"https://via.placeholder.com/220x150?text=Bep+Gas"},
+      {id:"BEP2", name:"Bếp Điện Panasonic PNC22", type:"dien", brand:"Panasonic", price:3200000, img:"https://via.placeholder.com/220x150?text=Bep+Dien"},
+      {id:"BEP3", name:"Bếp Từ Electrolux ETX88", type:"tu", brand:"Electrolux", price:4200000, img:"https://via.placeholder.com/220x150?text=Bep+Tu"},
+      {id:"BEP4", name:"Bếp Gas Đôi Sunhouse SHB222", type:"gas", brand:"Sunhouse", price:1800000, img:"https://via.placeholder.com/220x150?text=Bep+Gas+2"}
+    ];
+
+    const grid = document.getElementById("productGrid");
+    const search = document.getElementById("search");
+    const typeFilter = document.getElementById("typeFilter");
+    const brandFilter = document.getElementById("brandFilter");
+    const sort = document.getElementById("sort");
+
+    function renderProducts() {
+      let list = [...products];
+      const keyword = search.value.toLowerCase();
+      const type = typeFilter.value;
+      const brand = brandFilter.value;
+      const sortValue = sort.value;
+
+      if (keyword) list = list.filter(p => p.name.toLowerCase().includes(keyword));
+      if (type) list = list.filter(p => p.type === type);
+      if (brand) list = list.filter(p => p.brand === brand);
+      if (sortValue === "asc") list.sort((a,b)=>a.price-b.price);
+      if (sortValue === "desc") list.sort((a,b)=>b.price-a.price);
+
+      grid.innerHTML = list.map(p => `
+        <div class="card">
+          <img src="${p.img}" alt="${p.name}">
+          <h3>${p.name}</h3>
+          <p>Thương hiệu: ${p.brand}</p>
+          <p class="price">${p.price.toLocaleString()} đ</p>
+        </div>
+      `).join("");
+    }
+
+    search.addEventListener("input", renderProducts);
+    typeFilter.addEventListener("change", renderProducts);
+    brandFilter.addEventListener("change", renderProducts);
+    sort.addEventListener("change", renderProducts);
+
+    renderProducts();
+  </script>
+</body>
+</html>
